@@ -1,17 +1,45 @@
 {% extends 'catalog/base.html' %}
 {% load my_tags %}
 {% block content %}
-<div class="row text-center">
+<div class="row text-start">
     <div class="col-3">
         <div class="card mb-4 box-shadow">
-            <div class="card-header">
-                <h4 class="my-0 font-weight-normal">{{ object.product_name }}</h4>
-            </div>
             <div class="card-body">
                 <img class="card-img-top"
                      src="{{ object.product_image|mymedia }}"
                      alt="Card image cap">
-                <p>{{ object.product_description }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-6 col-sm-12">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <td class="w-25">Наименование</td>
+                        <td>{{ object.product_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Описание</td>
+                        <td>{{ object.product_description }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Категория</td>
+                        <td>{{ object.product_category }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Цена</td>
+                        <td>{{ object.product_price }} ₽</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Дата начало продаж</td>
+                        <td>{{ object.created_at|format_date }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Дата последнего изменения</td>
+                        <td>{{ object.updated_at|format_date }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>
