@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import template
 
 
@@ -14,3 +16,9 @@ def mymedia(val):
     if val:
         return f'/media/{val}'
     return '#'
+
+
+@register.filter()
+def format_date(date):
+    new_format = date.strftime('%d.%m.%y %H:%M')
+    return new_format
