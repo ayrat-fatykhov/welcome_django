@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'blog_create' %}">Добавить блог</a>
+</div>
+<div class="row text-center">
+    {% for object in object_list %}
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">{{ object.blog_title }}</h4>
+            </div>
+            <div class="card-body">
+                <img class="card-img-top"
+                     src="{{ object.blog_preview|mymedia }}"
+                     alt="Card image cap">
+                <p>{{ object.blog_content|split }}</p>
+                <div class="btn-group">
+                    <a href="{% url 'blog_view' object.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Подробнее
+                    </a>
+                    <a href="{% url 'blog_edit' object.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Редактировать
+                    </a>
+                    <a href="{% url 'blog_delete' object.pk %}" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

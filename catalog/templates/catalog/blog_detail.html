@@ -1,0 +1,39 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="row text-start">
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <img class="card-img-top"
+                     src="{{ object.blog_preview|mymedia }}"
+                     alt="Card image cap">
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-6 col-sm-12">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <td class="w-25">Заголовок</td>
+                        <td>{{ object.blog_title }} ({{ object.blog_slug }})</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Cодержимое</td>
+                        <td>{{ object.blog_content }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Дата создания</td>
+                        <td>{{ object.created_at|format_date }}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25">Просмотры</td>
+                        <td>{{ object.views_count }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
