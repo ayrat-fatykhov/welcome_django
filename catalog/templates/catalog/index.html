@@ -6,11 +6,11 @@
     <div class="col-3">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">{{ object.product_name }}</h4>
+                <h4 class="my-0 font-weight-normal">{{ object.name }}</h4>
             </div>
             <div class="card-body">
                 <img class="card-img-top"
-                     src="{{ object.product_image|mymedia }}"
+                     src="{{ object.image|mymedia }}"
                      alt="Card image cap">
                 <p>{{ object.product_description|split }}</p>
                 <a href="{% url 'show_product' object.pk %}">Подробнее</a>
