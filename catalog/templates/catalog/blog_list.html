@@ -9,13 +9,13 @@
     <div class="col-3">
         <div class="card mb-4 box-shadow">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal">{{ object.blog_title }}</h4>
+                <h4 class="my-0 font-weight-normal">{{ object.title }}</h4>
             </div>
             <div class="card-body">
                 <img class="card-img-top"
-                     src="{{ object.blog_preview|mymedia }}"
+                     src="{{ object.preview|mymedia }}"
                      alt="Card image cap">
-                <p>{{ object.blog_content|split }}</p>
+                <p>{{ object.content|split }}</p>
                 <div class="btn-group">
                     <a href="{% url 'blog_view' object.pk %}" class="btn btn-sm btn-outline-secondary">
                         Подробнее
