@@ -6,7 +6,7 @@
         <div class="card mb-4 box-shadow">
             <div class="card-body">
                 <img class="card-img-top"
-                     src="{{ object.product_image|mymedia }}"
+                     src="{{ object.image|mymedia }}"
                      alt="Card image cap">
             </div>
         </div>
@@ -17,19 +17,19 @@
                 <table class="table table-striped">
                     <tr>
                         <td class="w-25">Наименование</td>
-                        <td>{{ object.product_name }}</td>
+                        <td>{{ object.name }}</td>
                     </tr>
                     <tr>
                         <td class="w-25">Описание</td>
-                        <td>{{ object.product_description }}</td>
+                        <td>{{ object.description }}</td>
                     </tr>
                     <tr>
                         <td class="w-25">Категория</td>
-                        <td>{{ object.product_category }}</td>
+                        <td>{{ object.category }}</td>
                     </tr>
                     <tr>
                         <td class="w-25">Цена</td>
-                        <td>{{ object.product_price }} ₽</td>
+                        <td>{{ object.price }} ₽</td>
                     </tr>
                     <tr>
                         <td class="w-25">Дата начало продаж</td>
