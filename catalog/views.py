@@ -1,7 +1,9 @@
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
-from catalog.models import Product, Blog
+
+from catalog.forms import ProductForm
+from catalog.models import Product, Blog, Version
 
 
 class ProductListView(ListView):
@@ -11,12 +13,20 @@ class ProductListView(ListView):
     model = Product
     template_name = 'catalog/index.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        products = Product.objects.all()
 
-class ContactsTemplateView(TemplateView):
-    """
-    Отображает шаблон 'Контакты' при переводе на соответствующую страницу
-    """
-    template_name = 'catalog/contacts.html'
+        for product in products:
+            versions = Version.objects.filter(product=product)
+            active_versions = versions.filter(is_active=True)
+            if active_versions:
+                product.active_version = active_versions.last().name
+            else:
+                product.active_version = 'Нет активной версии'
+
+        context_data['object_list'] = products
+        return context_data
 
 
 class ProductDetailView(DetailView):
@@ -25,6 +35,33 @@ class ProductDetailView(DetailView):
     """
     model = Product
     template_name = 'catalog/show_product.html'
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('product_list')
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('product_list')
+
+
+class ProductDeleteView(DeleteView):
+    """
+    Реализует возможность удаления блога
+    """
+    model = Product
+    success_url = reverse_lazy('product_list')
+
+
+class ContactsTemplateView(TemplateView):
+    """
+    Отображает шаблон 'Контакты' при переводе на соответствующую страницу
+    """
+    template_name = 'catalog/contacts.html'
 
 
 class BlogListView(ListView):
