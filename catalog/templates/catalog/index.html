@@ -1,6 +1,9 @@
 {% extends 'catalog/base.html' %}
 {% load my_tags %}
 {% block content %}
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'product_create' %}">Добавить продукт</a>
+</div>
 <div class="row text-center">
     {% for object in object_list %}
     <div class="col-3">
@@ -13,7 +16,18 @@
                      src="{{ object.image|mymedia }}"
                      alt="Card image cap">
                 <p>{{ object.product_description|split }}</p>
-                <a href="{% url 'show_product' object.pk %}">Подробнее</a>
+                <p>Активная версия: {{ object.active_version }}</p>
+                <div class="btn-group">
+                    <a href="{% url 'show_product' object.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Подробнее
+                    </a>
+                    <a href="{% url 'product_edit' object.pk %}" class="btn btn-sm btn-outline-secondary">
+                        Редактировать
+                    </a>
+                    <a href="{% url 'product_delete' object.pk %}" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </a>
+                </div>
             </div>
         </div>
     </div>
