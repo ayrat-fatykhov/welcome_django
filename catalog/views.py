@@ -14,6 +14,9 @@ class ProductListView(ListView):
     template_name = 'catalog/index.html'
 
     def get_context_data(self, *args, **kwargs):
+        """
+        Отображает только активные версии продукта
+        """
         context_data = super().get_context_data(*args, **kwargs)
         products = Product.objects.all()
 
@@ -38,12 +41,18 @@ class ProductDetailView(DetailView):
 
 
 class ProductCreateView(CreateView):
+    """
+    Создает новый продукт
+    """
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('product_list')
 
 
 class ProductUpdateView(UpdateView):
+    """
+    Реализует возможность редактирования продукта
+    """
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('product_list')
