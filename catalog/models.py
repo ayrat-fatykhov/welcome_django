@@ -77,3 +77,27 @@ class Blog(models.Model):
         verbose_name = 'блог'
         verbose_name_plural = 'блоги'
         ordering = ('created_at',)
+
+
+class Version(models.Model):
+    """
+    Определяет поля модели 'Версия'
+    """
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт')
+    numbers = models.IntegerField(verbose_name='номер версии')
+    name = models.CharField(max_length=150, verbose_name='название версии')
+    is_active = models.BooleanField(default=True, verbose_name='признак текущей версии')
+
+    def __str__(self):
+        """
+        Показывает поля модели 'Версия' в админке
+        """
+        return f'{self.name}, {self.is_active}'
+
+    class Meta:
+        """
+        Показывает в админке название модели в единственном и множеством числе, сортирует элементы по первичному ключу
+        """
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+        ordering = ('numbers',)
