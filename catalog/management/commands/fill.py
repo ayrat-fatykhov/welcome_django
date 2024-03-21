@@ -10,9 +10,9 @@ class Command(BaseCommand):
         Category.objects.all().delete()
 
         category_list = [
-            {'category_name': 'Телефон', 'category_description': 'Устройство для звонков'},
-            {'category_name': 'Смартфон', 'category_description': 'Умный телефон'},
-            {'category_name': 'Ноутбук', 'category_description': 'Мобильный компьютер'}
+            {'name': 'Телефон', 'description': 'Устройство для звонков'},
+            {'name': 'Смартфон', 'description': 'Умный телефон'},
+            {'name': 'Ноутбук', 'description': 'Мобильный компьютер'}
         ]
 
         category_for_create = []
@@ -22,10 +22,10 @@ class Command(BaseCommand):
         Category.objects.bulk_create(category_for_create)
 
         product_list = [
-            {'product_name': 'Asus Zenphone 10',
-             'product_description': 'Компактный смартфон',
-             'product_category': Category.objects.get(category_name='Смартфон'),
-             'product_price': 45000}
+            {'name': 'Asus Zenphone 10',
+             'description': 'Компактный смартфон',
+             'category': Category.objects.get(name='Смартфон'),
+             'price': 45000}
         ]
 
         product_for_create = []
