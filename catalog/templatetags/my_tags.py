@@ -16,9 +16,3 @@ def mymedia(val):
     if val:
         return f'/media/{val}'
     return '/media/blog/Blog-intro.jpg'
-
-
-@register.filter()
-def format_date(date):
-    new_format = date.strftime('%d.%m.%y %H:%M')
-    return new_format

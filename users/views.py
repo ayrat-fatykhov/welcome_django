@@ -1,0 +1,64 @@
+import string
+import random
+
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, FormView
+
+from users.forms import UserRegisterForm, UserPasswordRecoveryForm
+from users.models import User
+
+
+class RegisterView(CreateView):
+    """
+    Реализует возможность регистрации нового пользователя
+    """
+    model = User
+    form_class = UserRegisterForm
+    template_name = 'users/register.html'
+    success_url = reverse_lazy('users:login')
+
+    def form_valid(self, form):
+        """
+        Отправляет на почту пользователя письмо о регистрации на платформе
+        """
+        new_user = form.save()
+        send_mail(
+            subject='Добро пожаловать',
+            message='Вы зарегистрировались на нашей платформе',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[new_user.email],
+            fail_silently=False,
+        )
+        return super().form_valid(form)
+
+
+class UserPasswordRecoveryView(FormView):
+    """
+    Реализует возможность восстановления пароля
+    """
+    template_name = 'users/user_password_reset.html'
+    form_class = UserPasswordRecoveryForm
+    success_url = reverse_lazy('users:login')
+
+    def form_valid(self, form):
+        """
+        Отправляет на почту новый пароль для входа на платформу
+        """
+        email = form.cleaned_data.get('email')
+        user = User.objects.filter(email=email).first()
+
+        if user is not None:
+            characters = string.ascii_letters + string.digits
+            new_password = ''.join(random.choice(characters) for i in range(12))
+
+            user.password = make_password(new_password)
+            user.save()
+
+            subject = 'Восстановление пароля'
+            message = f'Ваш новый пароль: {new_password}'
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
+
+        return super().form_valid(form)
