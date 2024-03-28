@@ -1,3 +1,3 @@
-Параметры входа для администратора:
-username - admin_django;
-password - skyPro29
+## Предварительная настройка приложения перед запуском
+1. Заполнить в config/settings почту (EMAIL_HOST_USER) и пароль (EMAIL_HOST_PASSWORD);
+2. Выполнить в терминале команду "python3 manage.py csu" (создать супер пользователя).
