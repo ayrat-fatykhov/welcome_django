@@ -4,7 +4,9 @@ from catalog.models import Category, Product
 
 
 class Command(BaseCommand):
-
+    """
+    Кастомная команда для заполнения базы данных
+    """
     def handle(self, *args, **options):
 
         Category.objects.all().delete()
