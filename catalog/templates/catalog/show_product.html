@@ -33,11 +33,11 @@
                     </tr>
                     <tr>
                         <td class="w-25">Дата начало продаж</td>
-                        <td>{{ object.created_at|format_date }}</td>
+                        <td>{{ object.created_at|date:"d m Y" }}</td>
                     </tr>
                     <tr>
                         <td class="w-25">Дата последнего изменения</td>
-                        <td>{{ object.updated_at|format_date }}</td>
+                        <td>{{ object.updated_at|date:"d m Y" }}</td>
                     </tr>
                 </table>
             </div>
