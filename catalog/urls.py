@@ -1,5 +1,3 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
 
 from catalog.views import ProductListView, ProductDetailView, ContactsTemplateView, BlogListView, BlogCreateView, \
@@ -17,4 +15,4 @@ urlpatterns = [
     path('blog/view/<int:pk>/', BlogDetailView.as_view(), name='blog_view'),
     path('blog/edit/<int:pk>/', BlogUpdateView.as_view(), name='blog_edit'),
     path('blog/delete/<int:pk>', BlogDeleteView.as_view(), name='blog_delete')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
