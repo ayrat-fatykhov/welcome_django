@@ -4,6 +4,9 @@ from catalog.models import Product, Version
 
 
 class StyleFormMixin:
+    """
+    Миксин для стилизации форм
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
@@ -14,12 +17,18 @@ class StyleFormMixin:
 
 
 class ProductForm(StyleFormMixin, forms.ModelForm):
+    """
+    Переопределяет заполняемые поля для форм продукта
+    """
 
     class Meta:
         model = Product
         fields = ('name', 'description', 'category', 'price',)
 
     def clean_name(self):
+        """
+        Вводит ограничение в виде недопустимых слов в названии продукта
+        """
         cleaned_data = self.cleaned_data['name']
 
         words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
