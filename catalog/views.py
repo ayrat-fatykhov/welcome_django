@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
@@ -40,30 +41,45 @@ class ProductDetailView(DetailView):
     template_name = 'catalog/show_product.html'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Создает новый продукт
     """
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('product_list')
+    login_url = 'users:login'
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.creator = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
     Реализует возможность редактирования продукта
     """
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('product_list')
+    login_url = 'users:login'
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.creator = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """
     Реализует возможность удаления блога
     """
     model = Product
     success_url = reverse_lazy('product_list')
+    login_url = 'users:login'
 
 
 class ContactsTemplateView(TemplateView):
