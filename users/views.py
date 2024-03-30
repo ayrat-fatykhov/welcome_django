@@ -4,8 +4,9 @@ import random
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView, FormView, TemplateView
 
 from users.forms import UserRegisterForm, UserPasswordRecoveryForm
 from users.models import User
@@ -22,17 +23,40 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         """
-        Отправляет на почту пользователя письмо о регистрации на платформе
+        Отправляет на почту пользователя письмо о верификации
         """
         new_user = form.save()
+        current_site = self.request.get_host()
+        ver_code = "".join([str(random.randint(1, 9)) for i in range(5)])
+        new_user.ver_code = ver_code
+        new_user.is_active = False
+        new_user.save()
         send_mail(
-            subject='Добро пожаловать',
-            message='Вы зарегистрировались на нашей платформе',
+            subject='Верификация',
+            message=f'Ваш код: {ver_code}.\nПерейдите по ссылке: {current_site}/users/emailconfirm',
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[new_user.email],
             fail_silently=False,
         )
         return super().form_valid(form)
+
+
+class EmailConfirmView(TemplateView):
+    """
+    Реализует возможность верификации пользователя по коду
+    """
+    def get(self, request, *args, **kwargs):
+        return render(request, 'users/email_confirm.html')
+
+    def post(self, request, *args, **kwargs):
+        code = request.POST.get('ver_code')
+        user = get_object_or_404(User, ver_code=code)
+
+        if not user.is_active:
+            user.is_active = True
+            user.save()
+            return redirect('users:login')
+        return redirect('product_list')
 
 
 class UserPasswordRecoveryView(FormView):
