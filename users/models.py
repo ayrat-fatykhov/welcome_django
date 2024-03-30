@@ -16,6 +16,8 @@ class User(AbstractUser):
     phone = models.CharField(max_length=35, verbose_name='телефон', **NULLABLE)
     country = models.CharField(max_length=150, verbose_name='страна', **NULLABLE)
 
+    ver_code = models.CharField(verbose_name='код верификации', **NULLABLE)
+
     """
     Реализуют возможность взаимодействия с пользователем через email
     (по умолчанию установлено поле 'имя пользователя')
