@@ -102,7 +102,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form_class(self):
         """
-        Возвращает форму в зависимости от автораризованного на данный момент пользователя
+        Возвращает форму в зависимости от авторизованного на данный момент пользователя
         """
         user = self.request.user
         if user.is_superuser or self.object.creator == user:
