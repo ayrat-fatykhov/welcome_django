@@ -21,7 +21,7 @@
                     <a href="{% url 'show_product' object.pk %}" class="btn btn-sm btn-outline-secondary">
                         Подробнее
                     </a>
-                    {% if request.user.is_authenticated %}
+                    {% if perms.catalog.change_category and perms.catalog.change_description and perms.catalog.set_published or object.creator == request.user %}
                     <a href="{% url 'product_edit' object.pk %}" class="btn btn-sm btn-outline-secondary">
                         Редактировать
                     </a>
