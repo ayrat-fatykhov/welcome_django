@@ -1,9 +1,10 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
-from catalog.forms import ProductForm
+from catalog.forms import ProductForm, ProductModeratorForm
 from catalog.models import Product, Blog, Version
 
 
@@ -32,6 +33,14 @@ class ProductListView(ListView):
         context_data['object_list'] = products
         return context_data
 
+    def get_queryset(self, *args, **kwargs):
+        """
+        Возвращает только опубликованные блоги
+        """
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_publish=True)
+        return queryset
+
 
 class ProductDetailView(DetailView):
     """
@@ -51,6 +60,9 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     login_url = 'users:login'
 
     def form_valid(self, form):
+        """
+        Привязывает продукт к создателю публикации
+        """
         self.object = form.save()
         self.object.creator = self.request.user
         self.object.save()
@@ -67,10 +79,36 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     login_url = 'users:login'
 
     def form_valid(self, form):
+        """
+        Привязывает изменения к пользвателю
+        """
         self.object = form.save()
         self.object.creator = self.request.user
         self.object.save()
         return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        """
+        Вводит ограничение на изменения продукта
+        """
+        self.object = super().get_object(queryset)
+        if (
+                self.object.creator == self.request.user
+                or self.request.user.is_superuser is True
+                or self.request.user.groups.filter(name="moderator").exists() is True
+        ):
+            return self.object
+        raise Http404
+
+    def get_form_class(self):
+        """
+        Возвращает форму в зависимости от автораризованного на данный момент пользователя
+        """
+        user = self.request.user
+        if user.is_superuser or self.object.creator == user:
+            return ProductForm
+        elif user.groups.filter(name="moderator").exists() is True:
+            return ProductModeratorForm
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
@@ -144,7 +182,6 @@ class BlogUpdateView(UpdateView):
     """
     model = Blog
     fields = ('title', 'content', 'preview',)
-    # success_url = reverse_lazy('blog_list')
 
     def get_success_url(self):
         """

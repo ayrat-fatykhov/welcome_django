@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import ModelForm
 
 from catalog.models import Product, Version
 
@@ -39,3 +40,16 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
                 казино, криптовалюта, крипта, биржа, дешево, бесплатно, обман, полиция, радар.''')
 
         return cleaned_data
+
+
+class ProductModeratorForm(StyleFormMixin, ModelForm):
+    """
+    Определяет выводимые поля в форме для группы 'Модератор'
+    """
+    class Meta:
+        model = Product
+        fields = (
+            "is_publish",
+            "description",
+            "category",
+        )
