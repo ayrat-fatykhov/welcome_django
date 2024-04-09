@@ -1,11 +1,24 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
 
 from catalog.forms import ProductForm, ProductModeratorForm
-from catalog.models import Product, Blog, Version
+from catalog.models import Product, Blog, Version, Category
+from catalog.services import get_categories_from_cache
+
+
+class CategoryListView(ListView):
+    """
+    Отображает все категории продуктов
+    """
+    model = Category
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = get_categories_from_cache()
+        return queryset
 
 
 class ProductListView(ListView):
@@ -32,14 +45,6 @@ class ProductListView(ListView):
 
         context_data['object_list'] = products
         return context_data
-
-    def get_queryset(self, *args, **kwargs):
-        """
-        Возвращает только опубликованные блоги
-        """
-        queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(is_publish=True)
-        return queryset
 
 
 class ProductDetailView(DetailView):
